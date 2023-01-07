@@ -72,4 +72,14 @@ function main(pageName) {
             document.title = progress + "% " + pageName;
         }
     };
+
+    // this code will collapse all module tabs, only one which is being watched will be left open
+    let modules = document
+        .querySelector(".module-tree")
+        .querySelectorAll(".module-tree > li");
+    for (const element of modules) {
+        if (element.classList[0] != "aui-nav-child-selected") {
+            element.setAttribute("aria-expanded", "false");
+        }
+    }
 }
