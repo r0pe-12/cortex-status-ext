@@ -1,8 +1,8 @@
 try {
-    // let pageName = document
-    //     .getElementById("course-home-title")
-    //     .innerText.trim();
-    let pageName = document.title.replace(" - Documents", "").trim();
+    let pageName = document
+        .getElementById("course-home-title")
+        .innerText.trim();
+    // let pageName = document.title.replace(" - Documents", "").trim();
     // if (pageName != "Learning") {
 
     // Create your observer
