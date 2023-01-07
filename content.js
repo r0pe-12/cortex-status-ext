@@ -29,10 +29,11 @@ function main(pageName) {
     let parser = new DOMParser();
 
     function getProgress(courses, title = pageName) {
-        for (let i = 0; i < courses.length; i++) {
-            const el = courses[i];
-            if (el.querySelector(".course-title").innerText.trim() == title) {
-                let progress = el
+        for (const element of courses) {
+            if (
+                element.querySelector(".course-title").innerText.trim() == title
+            ) {
+                let progress = element
                     .querySelector(".aui-progress-indicator")
                     .getAttribute("data-rate");
                 return progress;
