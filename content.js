@@ -87,5 +87,18 @@ function main(pageName) {
                     "aui-iconfont-collapsed"
                 );
         }
+        element.setAttribute(
+            "title",
+            element
+                .querySelectorAll("a")[1]
+                .querySelectorAll("span")[1]
+                .innerText.trim()
+        );
+        for (const el of element.querySelectorAll("ul > li")) {
+            el.setAttribute(
+                "title",
+                el.querySelectorAll("a > span")[1].innerText.trim()
+            );
+        }
     }
 }
