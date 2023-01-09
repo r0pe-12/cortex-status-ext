@@ -80,6 +80,12 @@ function main(pageName) {
     for (const element of modules) {
         if (element.classList[0] != "aui-nav-child-selected") {
             element.setAttribute("aria-expanded", "false");
+            element
+                .querySelector("a > span")
+                .classList.replace(
+                    "aui-iconfont-expanded",
+                    "aui-iconfont-collapsed"
+                );
         }
     }
 }
