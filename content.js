@@ -3,16 +3,20 @@ try {
         .getElementById("course-home-title")
         .innerText.trim();
     // let pageName = document.title.replace(" - Documents", "").trim();
-    // if (pageName != "Learning") {
 
     // Create your observer
     const observer = new MutationObserver(function (mutationList, observer) {
-        // Your handling code here
-        main(pageName);
+        updateTitle(pageName);
+    });
+
+    // Create your observer
+    const subObserver = new MutationObserver(function (mutationList, observer) {
+        subMain(pageName);
     });
 
     // Select the element you want to watch
     const elementNode = document.querySelector("#module-title");
+    const titleNode = document.querySelector("title");
 
     // Call the observe function by passing the node you want to watch with configuration options
     observer.observe(elementNode, {
@@ -21,11 +25,17 @@ try {
         subtree: false,
     });
 
-    // }
+    // Call the observe function by passing the node you want to watch with configuration options
+    subObserver.observe(titleNode, {
+        attributes: false,
+        childList: true,
+        subtree: false,
+    });
 } catch (error) {}
 
 // main function
-function main(pageName) {
+function updateTitle(pageName) {
+    console.log("running function");
     let parser = new DOMParser();
 
     function getProgress(courses, title = pageName) {
@@ -101,4 +111,13 @@ function main(pageName) {
             );
         }
     }
+}
+
+// function to run when chat changes title
+function subMain(pageName) {
+    let title = document.querySelector("title").innerText.trim();
+    if (title.includes("Document")) {
+        updateTitle(pageName);
+    }
+    return false;
 }
