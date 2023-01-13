@@ -121,3 +121,17 @@ function subMain(pageName) {
     }
     return false;
 }
+
+// idea of https://github.com/Alldden
+
+let stateCheck = setInterval(() => {
+    if (document.readyState === "complete") {
+        clearInterval(stateCheck);
+        const iframe = document
+            .querySelector("iframe")
+            .contentDocument.querySelector("iframe")
+            .contentDocument.querySelector("iframe");
+        iframe.setAttribute("allow", "fullscreen");
+        iframe.setAttribute("src", iframe.src);
+    }
+}, 1000);
