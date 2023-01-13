@@ -7,6 +7,7 @@ try {
     // Create your observer
     const observer = new MutationObserver(function (mutationList, observer) {
         updateTitle(pageName);
+        fullscreen();
     });
 
     // Create your observer
@@ -123,15 +124,17 @@ function subMain(pageName) {
 }
 
 // idea of https://github.com/Alldden
-
-let stateCheck = setInterval(() => {
-    if (document.readyState === "complete") {
-        clearInterval(stateCheck);
-        const iframe = document
-            .querySelector("iframe")
-            .contentDocument.querySelector("iframe")
-            .contentDocument.querySelector("iframe");
-        iframe.setAttribute("allow", "fullscreen");
-        iframe.setAttribute("src", iframe.src);
-    }
-}, 1000);
+// this function enables fullscreen video
+function fullscreen() {
+    let stateCheck = setInterval(() => {
+        if (document.readyState === "complete") {
+            clearInterval(stateCheck);
+            const iframe = document
+                .querySelector("iframe")
+                .contentDocument.querySelector("iframe")
+                .contentDocument.querySelector("iframe");
+            iframe.setAttribute("allow", "fullscreen");
+            iframe.setAttribute("src", iframe.src);
+        }
+    }, 1000);
+}
