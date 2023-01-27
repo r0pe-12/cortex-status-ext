@@ -1,7 +1,17 @@
 body {
-    width: 80px;
-    height: 45px;
+    width: 200px;
+    /* height: 200px; */
 }
+
+.card {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 15px;
+	font-weight: bold;
+}
+
+/* button style */
 
 .switch {
     width: 75px;
@@ -9,7 +19,7 @@ body {
 }
 
 .toggle {
-    position: absolute;
+    position: relative;
     border: 2px solid #444249;
     border-radius: 20px;
     -webkit-transition: border-color 0.6s ease-out;
@@ -116,3 +126,5 @@ body {
     -webkit-transition: opacity 1s;
     transition: opacity 1s;
 }
+
+/*END button style */
