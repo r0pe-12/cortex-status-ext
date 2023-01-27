@@ -84,34 +84,7 @@ function updateTitle(pageName) {
         }
     };
 
-    // this code will collapse all module tabs, only one which is being watched will be left open
-    let modules = document
-        .querySelector(".module-tree")
-        .querySelectorAll(".module-tree > li");
-    for (const element of modules) {
-        if (element.classList[0] != "aui-nav-child-selected") {
-            element.setAttribute("aria-expanded", "false");
-            element
-                .querySelector("a > span")
-                .classList.replace(
-                    "aui-iconfont-expanded",
-                    "aui-iconfont-collapsed"
-                );
-        }
-        element.setAttribute(
-            "title",
-            element
-                .querySelectorAll("a")[1]
-                .querySelectorAll("span")[1]
-                .innerText.trim()
-        );
-        for (const el of element.querySelectorAll("ul > li")) {
-            el.setAttribute(
-                "title",
-                el.querySelectorAll("a > span")[1].innerText.trim()
-            );
-        }
-    }
+    collapse();
 }
 
 // function to run when chat changes title
@@ -138,3 +111,68 @@ function fullscreen() {
         }
     }, 1000);
 }
+
+function collapse() {
+    // this code will collapse all module tabs, only one which is being watched will be left open
+    let modules = document
+        .querySelector(".module-tree")
+        .querySelectorAll(".module-tree > li");
+
+    if (check("collapse-tabs")) {
+        for (const element of modules) {
+            if (element.classList[0] != "aui-nav-child-selected") {
+                element.setAttribute("aria-expanded", "false");
+                element
+                    .querySelector("a > span")
+                    .classList.replace(
+                        "aui-iconfont-expanded",
+                        "aui-iconfont-collapsed"
+                    );
+            }
+        }
+    } else {
+        for (const element of modules) {
+            if (element.classList[0] != "aui-nav-child-selected") {
+                element.setAttribute("aria-expanded", "true");
+                element
+                    .querySelector("a > span")
+                    .classList.replace(
+                        "aui-iconfont-collapsed",
+                        "aui-iconfont-expanded"
+                    );
+            }
+        }
+    }
+
+    for (const element of modules) {
+        element.setAttribute(
+            "title",
+            element
+                .querySelectorAll("a")[1]
+                .querySelectorAll("span")[1]
+                .innerText.trim()
+        );
+        for (const el of element.querySelectorAll("ul > li")) {
+            el.setAttribute(
+                "title",
+                el.querySelectorAll("a > span")[1].innerText.trim()
+            );
+        }
+    }
+}
+
+function check(name) {
+    return localStorage.getItem(name) == "true";
+}
+
+chrome.storage.onChanged.addListener((changes, namespace) => {
+    console.clear();
+    for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+        localStorage.setItem(key, newValue);
+        console.log(
+            `Storage key "${key}" in namespace "${namespace}" changed.`,
+            `Old value was "${oldValue}", new value is "${newValue}".`
+        );
+    }
+    collapse();
+});
