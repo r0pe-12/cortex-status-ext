@@ -30,3 +30,54 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
         localStorage.setItem(key, newValue);
     }
 });
+
+let parser = new DOMParser();
+
+function write(courses) {
+    const div = document.getElementById("stats");
+    div.innerText = "";
+    for (const element of courses) {
+        let cProgress = element
+            .querySelector(".aui-progress-indicator")
+            .getAttribute("data-rate");
+        let cName = element.querySelector(".course-title").innerText;
+        let data = `
+			<div class="stat-card">
+				<p class="c-name">${cName} :</p>
+				<p class="c-progress">${cProgress + "%"}</p>
+			</div>
+		`;
+        div.innerHTML += data;
+    }
+    return "Course not found";
+}
+
+function makeHttpObject() {
+    try {
+        return new XMLHttpRequest();
+    } catch (error) {}
+    try {
+        return new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (error) {}
+    try {
+        return new ActiveXObject("Microsoft.XMLHTTP");
+    } catch (error) {}
+
+    throw new Error("Could not create HTTP request object.");
+}
+
+let request = makeHttpObject();
+request.open(
+    "GET",
+    "https://docs.ictcortex.me/quiz/learning/my-courses.action",
+    true
+);
+request.send(null);
+request.onreadystatechange = function () {
+    if (request.readyState == 4) {
+        let data = request.responseText;
+        let htmlDoc = parser.parseFromString(data, "text/html");
+        let courses = htmlDoc.getElementsByClassName("course-meta");
+        write(courses);
+    }
+};
