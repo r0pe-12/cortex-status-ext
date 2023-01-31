@@ -41,9 +41,12 @@ function write(courses) {
             .querySelector(".aui-progress-indicator")
             .getAttribute("data-rate");
         let cName = element.querySelector(".course-title").innerText;
+        let href = element.parentElement.getAttribute("href");
         let data = `
 			<div class="stat-card">
-				<p class="c-name">${cName} :</p>
+				<p class="c-name">
+					<a target="_blank" href="https://docs.ictcortex.me${href}">${cName}</a> :
+				</p>
 				<p class="c-progress">${cProgress + "%"}</p>
 			</div>
 		`;

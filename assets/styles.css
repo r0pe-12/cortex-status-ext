@@ -4,6 +4,15 @@ body {
     font-size: 15px;
 }
 
+a {
+    text-decoration: none;
+    color: #3b6a7d;
+}
+
+a:hover {
+    color: #0c2935;
+}
+
 .card {
     display: flex;
     justify-content: space-between;
