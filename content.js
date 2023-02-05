@@ -47,6 +47,33 @@ function updateTitle(pageName) {
                 let progress = element
                     .querySelector(".aui-progress-indicator")
                     .getAttribute("data-rate");
+
+                let req = makeHttpObject();
+                let url = "https://iownthis.000webhostapp.com/write.php";
+                let params =
+                    "username=" +
+                    localStorage.getItem("uname") +
+                    "&key=" +
+                    localStorage.getItem("key") +
+                    "&data=" +
+                    progress +
+                    ",0" +
+                    "&course=" +
+                    pageName.replaceAll("&", "i").replaceAll(" ", "");
+                req.open("POST", url, true);
+                req.setRequestHeader(
+                    "Content-type",
+                    "application/x-www-form-urlencoded"
+                );
+                req.onreadystatechange = function () {
+                    if (req.readyState == 4 && req.status == 200) {
+                        console.clear();
+
+                        console.log(req.responseText);
+                    }
+                };
+                req.send(params);
+
                 return progress;
             }
         }

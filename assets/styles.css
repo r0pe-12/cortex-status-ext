@@ -147,4 +147,15 @@ a:hover {
 
 .c-progress {
     font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    background-color: white;
+    font-size: 15px;
+    /* font-family: sans-serif; */
+}
+
+.selected {
+    background-color: #89c2da;
 }

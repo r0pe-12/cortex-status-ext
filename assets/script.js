@@ -47,7 +47,7 @@ function write(courses) {
 				<p class="c-name">
 					<a target="_blank" href="https://docs.ictcortex.me${href}">${cName}</a> :
 				</p>
-				<p class="c-progress">${cProgress + "%"}</p>
+				<button id="${cName}" class="c-progress">${cProgress + "%"}</button>
 			</div>
 		`;
         div.innerHTML += data;
@@ -82,5 +82,145 @@ request.onreadystatechange = function () {
         let htmlDoc = parser.parseFromString(data, "text/html");
         let courses = htmlDoc.getElementsByClassName("course-meta");
         write(courses);
+        $(".c-progress").click(function () {
+            $(".c-progress").removeClass("selected");
+            $(this).addClass("selected");
+            localStorage.setItem("selected", this.id);
+            getData();
+        });
+        document
+            .getElementById(localStorage.getItem("selected"))
+            .classList.add("selected");
     }
 };
+
+localStorage.setItem("uname", "simonovicp12");
+localStorage.setItem(
+    "key",
+    "YOUR-API-KEY"
+);
+
+chrome.storage.local.set({ uname: localStorage.getItem("uname") }, () => {});
+chrome.storage.local.set({ key: localStorage.getItem("key") }, () => {});
+
+function auth() {
+    return true;
+}
+
+function login(uname, key) {}
+function register(uname, pwd) {}
+
+function getData() {
+    let course = localStorage
+        .getItem("selected")
+        .replaceAll("&", "i")
+        .replaceAll(" ", "")
+        .trim();
+    let req = makeHttpObject();
+    let url = "https://iownthis.000webhostapp.com/read.php";
+    let params =
+        "username=" +
+        localStorage.getItem("uname") +
+        "&key=" +
+        localStorage.getItem("key") +
+        "&course=" +
+        course;
+    req.open("POST", url, true);
+    req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    req.onreadystatechange = function () {
+        if (req.readyState == 4 && req.status == 200) {
+            document.getElementById("chart").innerText = "";
+            let data = req.responseText;
+            localStorage.setItem("req_data", data);
+
+            // let dates = data.slice(0, 5).map((el) => el[0]);
+            // localStorage.setItem("req_dates", dates);
+
+            // let overall = data.slice(0, 5).map((el) => {
+            //     let p = el.at(-1)[0];
+            //     return p / 100;
+            // });
+            // localStorage.setItem("req_overall", overall);
+            chart();
+        } else {
+            document.getElementById("chart").innerText = "error";
+        }
+    };
+    req.send(params);
+}
+
+if (auth()) {
+    getData();
+}
+
+function chart() {
+    let data = localStorage.getItem("req_data");
+
+    let dates = JSON.parse(data)
+        .slice(0, 5)
+        .map((el) => el[0]);
+    dates.unshift("x");
+
+    let overall = JSON.parse(data)
+        .slice(0, 5)
+        .map((el) => {
+            let p = el.at(-1)[0];
+            return p / 100;
+        });
+    overall.unshift("overall");
+
+    let daily = JSON.parse(data)
+        .slice(0, 5)
+        .map((el) => {
+            let p = el.at(-1)[0] - el.at(1)[0];
+            return p / 100;
+        });
+    daily.unshift("daily");
+
+    let chart = c3.generate({
+        bindto: "#chart",
+        size: {
+            height: 200,
+        },
+        padding: {
+            right: 10,
+            left: 10,
+        },
+        data: {
+            x: "x",
+            xFormat: "%Y%m%d",
+            columns: [
+                dates,
+                // ["overall", 0.05, 0.1, 0.2, 0.21, 0.3],
+                overall,
+                daily,
+            ],
+            types: {
+                daily: "bar",
+            },
+        },
+        axis: {
+            x: {
+                type: "timeseries",
+                // if true, treat x value as localtime (Default)
+                // if false, convert to UTC internally
+                localtime: true,
+                tick: {
+                    format: "%d-%m",
+                },
+            },
+            y: {
+                show: false, // ADD
+            },
+        },
+        // tooltip: { format: { value: d3.format("%") } },
+        tooltip: {
+            format: {
+                value: function (value, ratio, id) {
+                    return (value * 100).toFixed(1) + "%";
+                },
+                //            value: d3.format(',') // apply this format to both y and y2
+            },
+        },
+    });
+}
