@@ -126,7 +126,7 @@ function getData() {
     req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     req.onreadystatechange = function () {
         if (req.readyState == 4 && req.status == 200) {
-            document.getElementById("chart").innerText = "";
+            // document.getElementById("chart").innerText = "";
             let data = req.responseText;
             localStorage.setItem("req_data", data);
 
@@ -140,7 +140,7 @@ function getData() {
             // localStorage.setItem("req_overall", overall);
             chart();
         } else {
-            document.getElementById("chart").innerText = "error";
+            // document.getElementById("chart").innerText = "error";
         }
     };
     req.send(params);
@@ -174,50 +174,62 @@ function chart() {
         });
     daily.unshift("daily");
 
-    let chart = c3.generate({
-        bindto: "#chart",
-        size: {
-            height: 200,
-        },
-        padding: {
-            right: 10,
-            left: 10,
-        },
-        data: {
-            x: "x",
-            xFormat: "%Y%m%d",
+    if (document.getElementById("chart").childNodes.length === 0) {
+        console.log("empty");
+        window.graph = c3.generate({
+            bindto: "#chart",
+            size: {
+                height: 200,
+            },
+            padding: {
+                right: 10,
+                left: 10,
+            },
+            data: {
+                x: "x",
+                xFormat: "%Y%m%d",
+                columns: [
+                    dates,
+                    // ["overall", 0.05, 0.1, 0.2, 0.21, 0.3],
+                    overall,
+                    daily,
+                ],
+                types: {
+                    daily: "bar",
+                },
+            },
+            axis: {
+                x: {
+                    type: "timeseries",
+                    // if true, treat x value as localtime (Default)
+                    // if false, convert to UTC internally
+                    localtime: true,
+                    tick: {
+                        format: "%d-%m",
+                    },
+                },
+                y: {
+                    show: false, // ADD
+                },
+            },
+            // tooltip: { format: { value: d3.format("%") } },
+            tooltip: {
+                format: {
+                    value: function (value, ratio, id) {
+                        return (value * 100).toFixed(1) + "%";
+                    },
+                    //            value: d3.format(',') // apply this format to both y and y2
+                },
+            },
+        });
+    } else {
+        window.graph.load({
             columns: [
                 dates,
                 // ["overall", 0.05, 0.1, 0.2, 0.21, 0.3],
                 overall,
                 daily,
             ],
-            types: {
-                daily: "bar",
-            },
-        },
-        axis: {
-            x: {
-                type: "timeseries",
-                // if true, treat x value as localtime (Default)
-                // if false, convert to UTC internally
-                localtime: true,
-                tick: {
-                    format: "%d-%m",
-                },
-            },
-            y: {
-                show: false, // ADD
-            },
-        },
-        // tooltip: { format: { value: d3.format("%") } },
-        tooltip: {
-            format: {
-                value: function (value, ratio, id) {
-                    return (value * 100).toFixed(1) + "%";
-                },
-                //            value: d3.format(',') // apply this format to both y and y2
-            },
-        },
-    });
+        });
+    }
 }
