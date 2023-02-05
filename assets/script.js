@@ -94,11 +94,8 @@ request.onreadystatechange = function () {
     }
 };
 
-localStorage.setItem("uname", "simonovicp12");
-localStorage.setItem(
-    "key",
-    "YOUR-API-KEY"
-);
+localStorage.setItem("uname", "YOUR-USERNAME");
+localStorage.setItem("key", "YOUR-API-KEY");
 
 chrome.storage.local.set({ uname: localStorage.getItem("uname") }, () => {});
 chrome.storage.local.set({ key: localStorage.getItem("key") }, () => {});
