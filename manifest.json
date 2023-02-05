@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "CortexStats",
-    "version": "2.2",
+    "version": "3.0",
     "content_scripts": [
         {
             "matches": ["https://docs.ictcortex.me/quiz/course/*"],
