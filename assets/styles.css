@@ -4,6 +4,14 @@ body {
     font-size: 15px;
 }
 
+body::-webkit-scrollbar {
+    display: none;
+}
+
+div::-webkit-scrollbar {
+    display: none;
+}
+
 a {
     text-decoration: none;
     color: #3b6a7d;
@@ -137,6 +145,11 @@ a:hover {
 }
 
 /*END button style */
+
+#stats {
+    max-height: 300px;
+    overflow-y: auto;
+}
 
 .stat-card {
     display: flex;

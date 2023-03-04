@@ -154,11 +154,13 @@ function chart() {
     let data = localStorage.getItem("req_data");
 
     let dates = JSON.parse(data)
+        .reverse()
         .slice(0, 5)
         .map((el) => el[0]);
     dates.unshift("x");
 
     let overall = JSON.parse(data)
+        .reverse()
         .slice(0, 5)
         .map((el) => {
             let p = el.at(-1)[0];
@@ -167,6 +169,7 @@ function chart() {
     overall.unshift("overall");
 
     let daily = JSON.parse(data)
+        .reverse()
         .slice(0, 5)
         .map((el) => {
             let p = el.at(-1)[0] - el.at(1)[0];
